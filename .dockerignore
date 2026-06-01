@@ -1,0 +1,7 @@
+target/
+bin/
+.git/
+.gitignore
+README.MD
+.DS_Store
+Thumbs.db
