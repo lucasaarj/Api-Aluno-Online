@@ -30,9 +30,6 @@ USER aluno
 # Agora o COPY precida dar permissão para esse usuário
 COPY --from=build --chown=aluno:aluno /app/target/*.jar app.jar
 
-# Copia o .jar gerado na etapa anterior para esta nova imagem
-COPY --from=build /app/target/*.jar app.jar
-
 # Expõe a porta que a aplicação usa
 EXPOSE 8080
 
