@@ -1,6 +1,7 @@
 package br.com.alunoonline.api.security;
 
 import br.com.alunoonline.api.model.Usuario;
+import br.com.alunoonline.api.repository.UsuarioRepository;
 import br.com.alunoonline.api.service.AlunoService;
 import br.com.alunoonline.api.service.TokenService;
 import com.auth0.jwt.JWT;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -47,6 +49,9 @@ class JwtIntegrationTest {
 
     @MockitoBean
     private AlunoService alunoService;
+
+    @MockitoBean
+    private UsuarioRepository usuarioRepository;
 
     @Test
     void deveRetornarJwtQuandoLoginForValido() throws Exception {
@@ -87,6 +92,7 @@ class JwtIntegrationTest {
     void devePermitirAcessoComJwtValido() throws Exception {
         Usuario usuario = usuarioAutenticado();
         String token = tokenService.gerarToken(usuario);
+        when(usuarioRepository.findByLoginIgnoreCase(LOGIN)).thenReturn(Optional.of(usuario));
         when(alunoService.listarTodosAlunos()).thenReturn(List.of());
 
         mockMvc.perform(get("/alunos")
