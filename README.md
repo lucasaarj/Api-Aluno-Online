@@ -78,21 +78,42 @@ curl -i -X POST http://localhost:8080/usuarios \
 
 Para vincular a um professor, utilize professorId no lugar de alunoId. Informe apenas um dos dois campos. A senha deve ter entre 8 e 72 caracteres.
 
-### Realizar login
+### Realizar login e obter o JWT
+
+O endpoint de login valida as credenciais e, quando são válidas, retorna um token JWT.
 
 ~~~bash
-curl -i -X POST http://localhost:8080/auth/login \
-  -H "Content-Type: application/json" \
+curl -i -X POST http://localhost:8080/auth/login \\
+  -H "Content-Type: application/json" \\
   -d '{
     "login": "aluno@instituicao.edu.br",
     "senha": "senha123"
   }'
 ~~~
 
-- Credenciais válidas: HTTP 200 OK, sem corpo na resposta.
+- Credenciais válidas: HTTP 200 OK, com o token no corpo JSON.
 - Credenciais inválidas ou usuário inexistente: HTTP 401 Unauthorized.
 
-**Limitação atual:** o login valida as credenciais, mas ainda não gera JWT nem mantém uma sessão autenticada para requisições posteriores. Portanto, as demais rotas continuam respondendo HTTP 401 Unauthorized quando chamadas sem um mecanismo de autenticação aceito. A implementação de JWT não faz parte da versão atual.
+Exemplo de resposta:
+
+~~~json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9..."
+}
+~~~
+
+### Acessar uma rota protegida
+
+Envie o token recebido no login no cabeçalho Authorization, utilizando o esquema Bearer:
+
+~~~bash
+curl -i http://localhost:8080/alunos \\
+  -H "Authorization: Bearer SEU_TOKEN_JWT"
+~~~
+
+O token é assinado com HMAC256 (HS256), identifica o usuário pelo login (subject), utiliza o emissor "API ALUNO ONLINE" e tem validade de duas horas. A API valida a assinatura, o emissor e a expiração antes de autenticar o usuário.
+
+Sem token, com token inválido ou expirado, as rotas protegidas retornam HTTP 401 Unauthorized.
 
 ### Principais rotas da API
 
