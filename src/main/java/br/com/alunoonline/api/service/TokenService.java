@@ -41,4 +41,12 @@ public class TokenService {
                 .withExpiresAt(Date.from(agora.plus(EXPIRATION)))
                 .sign(algorithm);
     }
+
+    public String getSubject(String token) {
+        return JWT.require(algorithm)
+                .withIssuer(ISSUER)
+                .build()
+                .verify(token)
+                .getSubject();
+    }
 }
