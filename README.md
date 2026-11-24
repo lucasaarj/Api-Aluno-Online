@@ -83,8 +83,8 @@ Para vincular a um professor, utilize professorId no lugar de alunoId. Informe a
 O endpoint de login valida as credenciais e, quando são válidas, retorna um token JWT.
 
 ~~~bash
-curl -i -X POST http://localhost:8080/auth/login \\
-  -H "Content-Type: application/json" \\
+curl -i -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
   -d '{
     "login": "aluno@instituicao.edu.br",
     "senha": "senha123"
@@ -107,7 +107,7 @@ Exemplo de resposta:
 Envie o token recebido no login no cabeçalho Authorization, utilizando o esquema Bearer:
 
 ~~~bash
-curl -i http://localhost:8080/alunos \\
+curl -i http://localhost:8080/alunos \
   -H "Authorization: Bearer SEU_TOKEN_JWT"
 ~~~
 
