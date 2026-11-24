@@ -9,6 +9,7 @@ API REST desenvolvida em Java com Spring Boot para o gerenciamento de uma instit
 - **Spring Web MVC**: criação dos endpoints REST.
 - **Spring Data JPA**: persistência de dados.
 - **Spring Security**: autenticação e controle de acesso.
+- **JWT (Auth0 java-jwt)**: geração e validação de tokens para autenticação stateless.
 - **BCrypt**: codificação das senhas armazenadas.
 - **Flyway**: versionamento do esquema do banco de dados.
 - **PostgreSQL**: banco de dados relacional.
@@ -145,11 +146,14 @@ docker compose up -d
 
 ### Opção 2 — Execução local da aplicação
 
-Configure as variáveis de ambiente de conexão com o PostgreSQL:
+Configure as variáveis de ambiente de conexão com o PostgreSQL e a chave secreta utilizada para assinar os JWTs:
 
 - SPRING_DATASOURCE_URL
 - SPRING_DATASOURCE_USERNAME
 - SPRING_DATASOURCE_PASSWORD
+- JWT_SECRET
+
+A variável JWT_SECRET deve conter uma chave secreta com pelo menos 32 bytes. Mantenha esse valor privado e não o versione no repositório. Em ambientes como GitHub Codespaces ou Render, configure-o como secret/variável de ambiente.
 
 Execute:
 
