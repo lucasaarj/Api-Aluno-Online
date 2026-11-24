@@ -1,9 +1,9 @@
 package br.com.alunoonline.api.security;
 
 import br.com.alunoonline.api.model.Usuario;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import br.com.alunoonline.api.repository.UsuarioRepository;
 import br.com.alunoonline.api.service.TokenService;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,11 +41,11 @@ public class SecurityFilter extends OncePerRequestFilter {
                 String subject = tokenService.getSubject(token);
 
                 usuarioRepository.findByLoginIgnoreCase(subject).ifPresent(usuario -> {
-                var authentication = new UsernamePasswordAuthenticationToken(
-                        usuario,
-                        null,
-                        usuario.getAuthorities()
-                );
+                    var authentication = new UsernamePasswordAuthenticationToken(
+                            usuario,
+                            null,
+                            usuario.getAuthorities()
+                    );
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 });
