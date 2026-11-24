@@ -1,6 +1,7 @@
 package br.com.alunoonline.api.security;
 
 import br.com.alunoonline.api.model.Usuario;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import br.com.alunoonline.api.repository.UsuarioRepository;
 import br.com.alunoonline.api.service.TokenService;
 import jakarta.servlet.FilterChain;
@@ -36,17 +37,23 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = recuperarToken(request);
 
         if (token != null) {
-            String subject = tokenService.getSubject(token);
+            try {
+                String subject = tokenService.getSubject(token);
 
-            usuarioRepository.findByLoginIgnoreCase(subject).ifPresent(usuario -> {
+                usuarioRepository.findByLoginIgnoreCase(subject).ifPresent(usuario -> {
                 var authentication = new UsernamePasswordAuthenticationToken(
                         usuario,
                         null,
                         usuario.getAuthorities()
                 );
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            });
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                });
+            } catch (JWTVerificationException exception) {
+                SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
         }
 
         filterChain.doFilter(request, response);
